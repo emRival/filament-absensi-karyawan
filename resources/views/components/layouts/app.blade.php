@@ -10,11 +10,11 @@
 
     <style>
         #map {
-height: 400px;
+            height: 400px;
         }
     </style>
 </head>
-    <title>Presensi Karyawan</title>
+<title>Presensi Karyawan</title>
 </head>
 
 <body>

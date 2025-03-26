@@ -51,7 +51,7 @@ class ScheduleResource extends Resource
     {
         return $table
             ->modifyQueryUsing(function (Builder $query) {
-                $is_super_admin = Auth::user()->hasRole('super admin');;
+                $is_super_admin = Auth::user()->roles->pluck('id')->contains(1);
 
                 if (!$is_super_admin) {
                     $query->where('user_id', Auth::id());

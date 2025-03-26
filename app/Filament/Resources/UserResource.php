@@ -5,16 +5,21 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
+use BezhanSalleh\FilamentShield\Resources\RoleResource\Pages\EditRole;
+use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Pages\Dashboard;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
+use STS\FilamentImpersonate\Tables\Actions\Impersonate;
 
 class UserResource extends Resource
 {
@@ -46,7 +51,7 @@ class UserResource extends Resource
 
                 Group::make([
                     Section::make([
-                        Forms\Components\DateTimePicker::make('email_verified_at'),
+                        // Forms\Components\DateTimePicker::make('email_verified_at'),
                         Forms\Components\TextInput::make('password')
                             ->password()
                             ->maxLength(255)
@@ -71,9 +76,6 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('roles.name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -87,6 +89,24 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
+
+                Impersonate::make("Impersonate")
+                    ->record(fn($record) => $record)
+                    ->redirectTo('/admin'),
+
+
+                Action::make("Set Roles")
+                    ->color('info')
+                    ->icon('heroicon-m-adjustments-vertical')
+                    ->form([
+                        Select::make('roles')
+                            ->relationship('roles', 'name')
+                            ->required()
+                            ->searchable()
+                            ->preload()
+                            ->optionsLimit(10)
+                            ->getOptionLabelFromRecordUsing(fn($record) => $record->name),
+                    ]),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

@@ -69,13 +69,16 @@ return [
 
         'pages' => [
             'Dashboard',
+
         ],
 
         'widgets' => [
             'AccountWidget', 'FilamentInfoWidget',
         ],
 
-        'resources' => [],
+        'resources' => [
+
+        ],
     ],
 
     'discovery' => [

@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -37,28 +38,29 @@ class OfficeResource extends Resource
                             ->label('Location')
                             ->showMarker()
                             ->draggable()
+                            ->zoom(18)
+
                             ->extraControl([
                                 'zoomDelta'           => 1,
                                 'zoomSnap'            => 0.25,
                                 'wheelPxPerZoomLevel' => 60
                             ])
-                            ->afterStateHydrated(function (Forms\Get $get, Forms\Set $set, $record) {
+                            ->afterStateHydrated(function (Set $set, $record) {
+
                                 $latitude = $record->latitude ?? 0;
                                 $longitude = $record->longitude ?? 0;
 
 
-                                if ($latitude && $longitude) {
-                                    $set('location', [
-                                        'lat' => $latitude,
-                                        'lng' => $longitude,
-                                        'minZoom' => 1,
-                                        'maxZoom' => 23,
-                                        'zoom' => 19,
-                                        'ext' => 'png'
-                                    ]);
-                                }
+                                $set('location', [
+                                    'lat' => $latitude,
+                                    'lng' => $longitude,
+                                    'minZoom' => 1,
+                                    'maxZoom' => 23,
+                                    'zoom' => 18,
+                                    'ext' => 'png'
+                                ]);
                             })
-                            ->afterStateUpdated(function ($state, Forms\Set $set, $record) {
+                            ->afterStateUpdated(function ($state, Set $set) {
                                 $set('latitude', $state['lat']);
                                 $set('longitude', $state['lng']);
                             })
